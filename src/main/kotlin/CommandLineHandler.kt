@@ -38,7 +38,7 @@ object CommandLineHandler {
         _bank.transfer(accountId, moneyToTransfer)
     }
     fun info(_bank: Bank) { _bank.getAccountInfo() }
-    fun help(_bank: Bank) {
+    fun help() {
         println("Available actions: login, logout, register, withdraw, deposit, info, help, quit")
     }
 }
