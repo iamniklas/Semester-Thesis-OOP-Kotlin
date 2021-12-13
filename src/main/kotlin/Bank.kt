@@ -1,37 +1,36 @@
 import com.google.gson.Gson
 import kotlin.concurrent.fixedRateTimer
+import kotlin.math.log
 
 class Bank {
     var loggedInAs: Account? = null
     var registeredAccounts: MutableList<Account> = mutableListOf()
 
-    init {
-        loggedInAs = Account()
-        loggedInAs!!.apply {
-            firstName = "Niklas"
-            lastName = "Englmeier"
-            accountBalance = 1470.41f
-        }
+    companion object {
+        const val leadingSequence = "DE69"
+        const val blz = "71150000"
     }
 
-    fun register() {
-        var newAccount = Account()
-        println("Enter account details in the following order")
-        println("First Name - Last Name - PIN")
-        newAccount.apply {
-            firstName = readLine()!!
-            lastName = readLine()!!
-            pin = readLine()!!
-        }
+    fun register(newAccount: Account) {
+        newAccount.accountIdentifier =
+            leadingSequence+blz+(System.currentTimeMillis()/1000).toString()
 
         loggedInAs = newAccount
         registeredAccounts.add(newAccount)
         println("Welcome ${newAccount.firstName} ${newAccount.lastName}!")
+        println("Your card identifier: ${newAccount.accountIdentifier}")
         println("You can now use our services")
     }
 
-    fun login() {
+    fun login(_cardIdentifier: String, _pin: String) {
+        val targetAccount = registeredAccounts.filter { it -> it.accountIdentifier == _cardIdentifier && it.pin == _pin }
+        if(targetAccount.isEmpty()) {
+            println("Invalid credentials. No account has been found")
+            return
+        }
 
+        loggedInAs = targetAccount.first()
+        println("Welcome ${loggedInAs!!.firstName} ${loggedInAs!!.lastName}")
     }
 
     fun logout() {
@@ -40,14 +39,35 @@ class Bank {
         println("Successfully logged out")
     }
 
-    fun withdraw() {
+    fun withdraw(_amount: Float) {
         if(!requireLogin()) { return }
-        loggedInAs!!.withdraw(readLine()!!.toFloat())
+        loggedInAs!!.withdraw(_amount)
     }
 
-    fun deposit() {
+    fun deposit(_amount: Float) {
         if(!requireLogin()) { return }
-        loggedInAs!!.deposit(readLine()!!.toFloat())
+        loggedInAs!!.deposit(_amount)
+    }
+
+    fun transfer(_accountId: String, _moneyToTransfer: Float) {
+        if(!requireLogin()) { return }
+        if(!registeredAccounts.any { it.accountIdentifier.contentEquals(_accountId) }) {
+            println("No account found with identifier $_accountId")
+            return
+        }
+        if(loggedInAs!!.accountBalance < _moneyToTransfer) {
+            println("You don't have enough money to transfer this amount")
+        }
+
+        val targetAccount = registeredAccounts.first { it -> it.accountIdentifier.contentEquals(_accountId) }
+        targetAccount.accountBalance += _moneyToTransfer
+        loggedInAs!!.accountBalance -= _moneyToTransfer
+        println("Successfully transferred money to ${targetAccount.firstName} ${targetAccount.lastName}")
+    }
+
+    fun getAccountInfo() {
+        if(!requireLogin()) { return }
+        println(loggedInAs.toString())
     }
 
     private fun requireLogin(): Boolean {
