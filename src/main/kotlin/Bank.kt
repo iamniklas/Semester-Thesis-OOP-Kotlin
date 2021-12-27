@@ -1,17 +1,17 @@
+import accounttypes.StandardAccount
 import com.google.gson.Gson
-import kotlin.concurrent.fixedRateTimer
-import kotlin.math.log
+import java.time.LocalDateTime
 
 class Bank {
-    var loggedInAs: Account? = null
-    var registeredAccounts: MutableList<Account> = mutableListOf()
+    var loggedInAs: StandardAccount? = null
+    var registeredAccounts: MutableList<StandardAccount> = mutableListOf()
 
     companion object {
         const val leadingSequence = "DE69"
         const val blz = "71150000"
     }
 
-    fun register(newAccount: Account) {
+    fun register(newAccount: StandardAccount) {
         newAccount.accountIdentifier =
             leadingSequence+blz+(System.currentTimeMillis()/1000).toString()
 
@@ -30,6 +30,7 @@ class Bank {
         }
 
         loggedInAs = targetAccount.first()
+        loggedInAs!!.lastTimeLoggedIn = LocalDateTime.now()
         println("Welcome ${loggedInAs!!.firstName} ${loggedInAs!!.lastName}")
     }
 
@@ -61,8 +62,17 @@ class Bank {
 
         val targetAccount = registeredAccounts.first { it -> it.accountIdentifier.contentEquals(_accountId) }
         targetAccount.accountBalance += _moneyToTransfer
-        loggedInAs!!.accountBalance -= _moneyToTransfer
+
+        val transactionFeeOrCashback = _moneyToTransfer * (1 - loggedInAs!!.transactionMultiplier)
+        loggedInAs!!.accountBalance -= _moneyToTransfer + transactionFeeOrCashback
         println("Successfully transferred money to ${targetAccount.firstName} ${targetAccount.lastName}")
+
+        if(transactionFeeOrCashback > 0.0f) {
+            println("A transaction fee of $transactionFeeOrCashback has been withdrawn from your account.")
+        }
+        else if(transactionFeeOrCashback < 0.0f) {
+            println("You have been awarded with a cashback of $transactionFeeOrCashback")
+        }
     }
 
     fun getAccountInfo() {

@@ -1,6 +1,9 @@
+package accounttypes
+
+import Transaction
 import java.time.LocalDateTime
 
-class Account {
+abstract class Account(_transactionMultiplier: Float) {
     var firstName: String = ""
     var lastName: String = ""
 
@@ -12,11 +15,9 @@ class Account {
     var accountBalance: Float = 0.0f
     var transactionHistory: MutableList<Transaction> = mutableListOf()
 
-    override fun toString(): String {
-        return "Account Owner: $firstName $lastName \nCard Identifier: $accountIdentifier \nAccount Balance: $accountBalance€ \nTotal Transactions: ${transactionHistory.size}"
-    }
+    var transactionMultiplier = _transactionMultiplier
 
-    fun withdraw(_amount: Float) {
+    open fun withdraw(_amount: Float) {
         if(_amount > accountBalance) {
             println("Not enough money stored in your account")
             println("Quitting...")
@@ -42,5 +43,9 @@ class Account {
         accountBalance += _amount
         println("Deposit $_amount to your account")
         println("New Account Balance: $accountBalance")
+    }
+
+    override fun toString(): String {
+        return "Account Owner: $firstName $lastName \nCard Identifier: $accountIdentifier \nAccount Balance: $accountBalance€ \nTotal Transactions: ${transactionHistory.size}"
     }
 }

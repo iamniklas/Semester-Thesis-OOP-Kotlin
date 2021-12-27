@@ -1,3 +1,4 @@
+import accounttypes.StandardAccount
 import org.junit.jupiter.api.Test
 
 class BankSystemTests {
@@ -6,7 +7,7 @@ class BankSystemTests {
 
     @Test
     fun createAccounts() {
-        bank.register(Account().apply {
+        bank.register(StandardAccount().apply {
             firstName = "Max"
             lastName = "Mustermann"
             pin = "123456"
@@ -14,7 +15,7 @@ class BankSystemTests {
 
         Thread.sleep(1500)
 
-        bank.register(Account().apply {
+        bank.register(StandardAccount().apply {
             firstName = "Maria"
             lastName = "Musterfrau"
             pin = "456789"
@@ -25,7 +26,7 @@ class BankSystemTests {
 
     @Test
     fun registerLogoutLogin() {
-        bank.register(Account().apply {
+        bank.register(StandardAccount().apply {
             firstName = "Max"
             lastName = "Mustermann"
             pin = "123456"
@@ -40,13 +41,13 @@ class BankSystemTests {
 
     @Test
     fun createAccountsDepositAndTransferMoney() {
-        val acc1 = Account().apply {
+        val acc1 = StandardAccount().apply {
             firstName = "Max"
             lastName = "Mustermann"
             pin = "123456"
         }
         Thread.sleep(1500)
-        val acc2 = Account().apply {
+        val acc2 = StandardAccount().apply {
             firstName = "Maria"
             lastName = "Musterfrau"
             pin = "456789"

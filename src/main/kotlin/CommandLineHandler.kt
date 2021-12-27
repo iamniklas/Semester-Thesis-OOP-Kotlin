@@ -1,8 +1,10 @@
+import accounttypes.StandardAccount
+
 object CommandLineHandler {
     fun register(_bank: Bank) {
         println("Enter single account details in the following order and hit enter after each one")
         println("First Name - Last Name - PIN")
-        val newAccount = Account().apply {
+        val newAccount = StandardAccount().apply {
             firstName = readLine()!!
             lastName = readLine()!!
             pin = readLine()!!
