@@ -1,6 +1,7 @@
 import accounttypes.StandardAccount
 import com.google.gson.Gson
 import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 
 class Bank {
     var loggedInAs: StandardAccount? = null
@@ -16,6 +17,7 @@ class Bank {
             leadingSequence+blz+(System.currentTimeMillis()/1000).toString()
 
         loggedInAs = newAccount
+        loggedInAs?.lastTimeLoggedIn = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS)
         registeredAccounts.add(newAccount)
         println("Welcome ${newAccount.firstName} ${newAccount.lastName}!")
         println("Your card identifier: ${newAccount.accountIdentifier}")
@@ -30,8 +32,9 @@ class Bank {
         }
 
         loggedInAs = targetAccount.first()
-        loggedInAs!!.lastTimeLoggedIn = LocalDateTime.now()
         println("Welcome ${loggedInAs!!.firstName} ${loggedInAs!!.lastName}")
+        println("Last time you logged in: ${loggedInAs?.lastTimeLoggedIn}")
+        loggedInAs?.lastTimeLoggedIn = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS)
     }
 
     fun logout() {
