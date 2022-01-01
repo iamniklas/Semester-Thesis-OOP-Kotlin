@@ -13,7 +13,7 @@ object CommandLineHandler {
         _bank.register(newAccount)
     }
     fun login(_bank: Bank) {
-        println("Enter your card identifier")
+        println("Enter your account identifier")
         val cardIdentifier = readLine()!!
         println("Enter your PIN")
         val pin = readLine()!!
@@ -35,7 +35,7 @@ object CommandLineHandler {
         //if(!_bank.requireLogin()) { return }
         println("Enter the target account's identifier")
         val accountId = readLine()!!
-        println("Enter the amount of money to transfer")
+        println("Enter the amount of money you want to transfer")
         val moneyToTransfer = readLine()!!.toFloat()
         _bank.transfer(accountId, moneyToTransfer)
     }
