@@ -1,8 +1,7 @@
 import Program.running
-import kotlin.math.log
 
 fun main(args: Array<String>) {
-    var bank = Bank()
+    val bank = Bank()
 
     println("CMD BANK")
     println("BUILT WITH KOTLIN & RUN BY JVM")
