@@ -1,6 +1,10 @@
 package accounttypes
 
 class StandardAccount : Account() {
+    override fun addRegistrationAmount() {
+        accountBalance += 50.0f
+    }
+
     override fun withdraw(_amount: Float, transactionType: TransactionType): Int {
         var amount = _amount
         if(accountBalance < 0.0f) {

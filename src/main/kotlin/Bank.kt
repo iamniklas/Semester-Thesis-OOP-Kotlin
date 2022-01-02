@@ -17,6 +17,8 @@ class Bank {
     fun register(newAccount: Account) : Int {
         newAccount.accountIdentifier = leadingSequence+blz+(System.currentTimeMillis()/1000).toString()
 
+        newAccount.addRegistrationAmount()
+
         loggedInAs = newAccount
         loggedInAs?.lastTimeLoggedIn = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS)
         registeredAccounts.add(newAccount)
@@ -61,10 +63,13 @@ class Bank {
             return 3
         }
 
-        val targetAccount = registeredAccounts.first { it -> it.accountIdentifier.contentEquals(_accountId) }
-
-        targetAccount.deposit(_moneyToTransfer, TransactionType.AccountTransfer)
-        loggedInAs!!.withdraw(_moneyToTransfer, TransactionType.AccountTransfer)
+        //Better with built-in kotlin functions (e.g. first {it ->}), but this will only return a copy. That is why I'm not using it here
+        for (i in 0 until registeredAccounts.size) {
+            if(registeredAccounts[i].accountIdentifier == _accountId) {
+                registeredAccounts[i].deposit(_moneyToTransfer, TransactionType.AccountTransfer)
+                loggedInAs!!.withdraw(_moneyToTransfer, TransactionType.AccountTransfer)
+            }
+        }
 
         return 0
     }

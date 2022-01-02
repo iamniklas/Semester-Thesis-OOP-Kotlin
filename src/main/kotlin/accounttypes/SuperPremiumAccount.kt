@@ -3,6 +3,10 @@ package accounttypes
 import kotlin.random.Random
 
 class SuperPremiumAccount : Account() {
+    override fun addRegistrationAmount() {
+        accountBalance += 100.0f
+    }
+
     override fun withdraw(_amount: Float, transactionType: TransactionType): Int {
         return super.withdraw(_amount, transactionType)
     }

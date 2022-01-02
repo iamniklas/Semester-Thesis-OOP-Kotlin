@@ -16,6 +16,8 @@ abstract class Account() {
     var accountBalance: Float = 0.0f
     var transactionHistory: MutableList<Transaction> = mutableListOf()
 
+    abstract fun addRegistrationAmount()
+
     open fun withdraw(_amount: Float, transactionType: TransactionType) : Int {
         //Not enough money stored
         if(_amount > accountBalance) {
@@ -58,6 +60,6 @@ abstract class Account() {
     }
 
     override fun toString(): String {
-        return "Account Owner: $firstName $lastName \nCard Identifier: $accountIdentifier \nAccount Balance: $accountBalance€ \nTotal Transactions: ${transactionHistory.size}"
+        return "Account Owner: $firstName $lastName \nCard Identifier: $accountIdentifier \nAccount Balance: $accountBalance \nPIN: $pin"
     }
 }
