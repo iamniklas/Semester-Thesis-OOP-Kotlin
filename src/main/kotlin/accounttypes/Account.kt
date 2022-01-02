@@ -25,7 +25,7 @@ abstract class Account {
         }
 
         //Invalid value
-        if(_amount < 0) {
+        if(_amount <= 0) {
             return 2
         }
 
@@ -36,7 +36,7 @@ abstract class Account {
 
     open fun deposit(_amount: Float, transactionType: TransactionType) : Int {
         //Invalid value
-        if(_amount < 0) {
+        if(_amount <= 0) {
             return 1
         }
 
