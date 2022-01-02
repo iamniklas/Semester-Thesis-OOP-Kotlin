@@ -19,8 +19,8 @@ abstract class Account {
     abstract fun addRegistrationAmount()
 
     open fun withdraw(_amount: Float, transactionType: TransactionType) : Int {
-        //Not enough money stored
-        if(_amount > accountBalance) {
+        //Not enough money stored in case the withdrawal is done by an ATM
+        if(transactionType == TransactionType.ATM && _amount > accountBalance) {
             return 1
         }
 

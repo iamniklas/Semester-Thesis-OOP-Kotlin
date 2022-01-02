@@ -56,11 +56,14 @@ class Bank {
 
     fun transfer(_accountId: String, _moneyToTransfer: Float) : Int{
         if(!requireLogin()) { return 1 }
-        if(!registeredAccounts.any { it.accountIdentifier.contentEquals(_accountId) }) {
+        if(_moneyToTransfer < 0.0f) {
             return 2
         }
         if(loggedInAs!!.accountBalance < _moneyToTransfer) {
             return 3
+        }
+        if(!registeredAccounts.any { it.accountIdentifier.contentEquals(_accountId) }) {
+            return 4
         }
 
         //Better with built-in kotlin functions (e.g. first {it ->}), but this will only return a copy. That is why I'm not using it here
