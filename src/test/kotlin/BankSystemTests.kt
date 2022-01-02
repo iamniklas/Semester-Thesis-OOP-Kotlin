@@ -7,11 +7,9 @@ import java.io.FileReader
 import kotlin.math.floor
 
 class BankSystemTests {
-
-    var bank: Bank = Bank()
-
     @Test
     fun testRegisterAccounts() {
+        val bank: Bank = Bank()
         val basicAccount = BasicAccount().apply {
             firstName = "Basic Account"
         }
@@ -32,6 +30,7 @@ class BankSystemTests {
 
     @Test
     fun testAccountInfo() {
+        val bank: Bank = Bank()
         bank.register(SuperPremiumAccount().apply {
             firstName = "Niklas"
             lastName = "Englmeier"
@@ -48,6 +47,7 @@ class BankSystemTests {
 
     @Test
     fun testLogin() {
+        val bank: Bank = Bank()
         val account = BasicAccount().apply {
             firstName = "Niklas"
             lastName = "Englmeier"
@@ -69,6 +69,7 @@ class BankSystemTests {
 
     @Test
     fun testRegistration() {
+        val bank: Bank = Bank()
         val account = BasicAccount().apply {
             firstName = "Niklas"
             lastName = "Englmeier"
@@ -84,6 +85,7 @@ class BankSystemTests {
 
     @Test
     fun testWithdrawAndDeposit() {
+        val bank: Bank = Bank()
         val account = StandardAccount().apply {
             firstName = "Niklas"
             lastName = "Englmeier"
@@ -102,6 +104,7 @@ class BankSystemTests {
 
     @Test
     fun testTransferDepositAndWithdraw() {
+        val bank: Bank = Bank()
         var cardId1 = ""
         val cardPin1 = "0000"
         var cardId2 = ""
