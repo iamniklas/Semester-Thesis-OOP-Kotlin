@@ -8,7 +8,7 @@ object CommandProcessor {
             "deposit" ->    { CommandLineHandler.deposit(_bank) }
             "transfer" ->   { CommandLineHandler.transfer(_bank) }
             "info" ->       { CommandLineHandler.info(_bank) }
-            "history" ->    { CommandLineHandler.info(_bank) }
+            "history" ->    { CommandLineHandler.history(_bank) }
             "help" ->       { CommandLineHandler.help() }
             "quit" ->       { Program.running = false }
             else ->         { println("Unknown command, try again!") }

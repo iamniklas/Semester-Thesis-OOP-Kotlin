@@ -1,4 +1,5 @@
 import accounttypes.StandardAccount
+import accounttypes.TransactionType
 import org.junit.jupiter.api.Test
 
 class BankSystemTests {
@@ -59,7 +60,7 @@ class BankSystemTests {
 
         println("---")
         bank.register(acc2)
-        bank.deposit(100.0f)
+        bank.deposit(100.0f, TransactionType.ATM)
         bank.transfer(acc1.accountIdentifier, 50.0f)
         bank.getAccountInfo()
 

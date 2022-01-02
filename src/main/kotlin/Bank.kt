@@ -1,96 +1,86 @@
+import accounttypes.Account
 import accounttypes.StandardAccount
+import accounttypes.TransactionType
 import com.google.gson.Gson
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
 class Bank {
-    var loggedInAs: StandardAccount? = null
-    var registeredAccounts: MutableList<StandardAccount> = mutableListOf()
+    var loggedInAs: Account? = null
+    var registeredAccounts: MutableList<Account> = mutableListOf()
 
     companion object {
         const val leadingSequence = "DE69"
         const val blz = "71150000"
     }
 
-    fun register(newAccount: StandardAccount) {
-        newAccount.accountIdentifier =
-            leadingSequence+blz+(System.currentTimeMillis()/1000).toString()
+    fun register(newAccount: Account) : Int {
+        newAccount.accountIdentifier = leadingSequence+blz+(System.currentTimeMillis()/1000).toString()
 
         loggedInAs = newAccount
         loggedInAs?.lastTimeLoggedIn = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS)
         registeredAccounts.add(newAccount)
-        println("Welcome ${newAccount.firstName} ${newAccount.lastName}!")
-        println("Your card identifier: ${newAccount.accountIdentifier}")
-        println("You can now use our services")
+        return 0
     }
 
-    fun login(_cardIdentifier: String, _pin: String) {
+    fun login(_cardIdentifier: String, _pin: String) : Int {
         val targetAccount = registeredAccounts.filter { it -> it.accountIdentifier == _cardIdentifier && it.pin == _pin }
         if(targetAccount.isEmpty()) {
-            println("Invalid credentials. No account has been found")
-            return
+            return 1
         }
 
         loggedInAs = targetAccount.first()
-        println("Welcome ${loggedInAs!!.firstName} ${loggedInAs!!.lastName}")
-        println("Last time you logged in: ${loggedInAs?.lastTimeLoggedIn}")
         loggedInAs?.lastTimeLoggedIn = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS)
+        return 0
     }
 
-    fun logout() {
-        if(!requireLogin()) { return }
+    fun logout() : Int {
+        if(!requireLogin()) { return 1 }
         loggedInAs = null
-        println("Successfully logged out")
+        return 0
     }
 
-    fun withdraw(_amount: Float) {
-        if(!requireLogin()) { return }
-        loggedInAs!!.withdraw(_amount)
+    fun withdraw(_amount: Float, _transactionType: TransactionType) : Int {
+        if(!requireLogin()) { return 1 }
+        loggedInAs!!.withdraw(_amount, _transactionType)
+        return 0
     }
 
-    fun deposit(_amount: Float) {
-        if(!requireLogin()) { return }
-        loggedInAs!!.deposit(_amount)
+    fun deposit(_amount: Float, _transactionType: TransactionType) : Int {
+        if(!requireLogin()) { return 1 }
+        loggedInAs!!.deposit(_amount, _transactionType)
+        return 0
     }
 
-    fun transfer(_accountId: String, _moneyToTransfer: Float) {
-        if(!requireLogin()) { return }
+    fun transfer(_accountId: String, _moneyToTransfer: Float) : Int{
+        if(!requireLogin()) { return 1 }
         if(!registeredAccounts.any { it.accountIdentifier.contentEquals(_accountId) }) {
-            println("No account found with identifier $_accountId")
-            return
+            return 2
         }
         if(loggedInAs!!.accountBalance < _moneyToTransfer) {
-            println("You don't have enough money to transfer this amount")
+            return 3
         }
 
         val targetAccount = registeredAccounts.first { it -> it.accountIdentifier.contentEquals(_accountId) }
-        targetAccount.accountBalance += _moneyToTransfer
 
-        val transactionFeeOrCashback = _moneyToTransfer * (1 - loggedInAs!!.transactionMultiplier)
-        loggedInAs!!.accountBalance -= _moneyToTransfer + transactionFeeOrCashback
-        println("Successfully transferred money to ${targetAccount.firstName} ${targetAccount.lastName}")
+        targetAccount.deposit(_moneyToTransfer, TransactionType.AccountTransfer)
+        loggedInAs!!.withdraw(_moneyToTransfer, TransactionType.AccountTransfer)
 
-        if(transactionFeeOrCashback > 0.0f) {
-            println("A transaction fee of $transactionFeeOrCashback has been withdrawn from your account.")
-        }
-        else if(transactionFeeOrCashback < 0.0f) {
-            println("You have been awarded with a cashback of $transactionFeeOrCashback")
-        }
+        return 0
     }
 
-    fun getAccountInfo() {
-        if(!requireLogin()) { return }
-        println(loggedInAs.toString())
+    fun getAccountInfo() : String {
+        if(!requireLogin()) { return "null" }
+        return loggedInAs.toString()
     }
 
-    private fun requireLogin(): Boolean {
-        if(loggedInAs == null) {
-            println("You have to be logged in to perform this action.")
-            println("Login to your account and try again")
-            return false
-        }
+    fun getTransferHistory() : String {
+        if(requireLogin()) return "null"
+        return loggedInAs!!.getLastFiveTransactions()
+    }
 
-        return true
+    fun requireLogin(): Boolean {
+        return loggedInAs != null
     }
 
     override fun toString(): String {

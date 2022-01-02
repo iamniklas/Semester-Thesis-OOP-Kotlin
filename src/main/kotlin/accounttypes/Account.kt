@@ -1,9 +1,10 @@
 package accounttypes
 
-import Transaction
+import java.lang.Integer.min
 import java.time.LocalDateTime
+import kotlin.math.max
 
-abstract class Account(_transactionMultiplier: Float) {
+abstract class Account() {
     var firstName: String = ""
     var lastName: String = ""
 
@@ -15,34 +16,45 @@ abstract class Account(_transactionMultiplier: Float) {
     var accountBalance: Float = 0.0f
     var transactionHistory: MutableList<Transaction> = mutableListOf()
 
-    var transactionMultiplier = _transactionMultiplier
-
-    open fun withdraw(_amount: Float) {
+    open fun withdraw(_amount: Float, transactionType: TransactionType) : Int {
+        //Not enough money stored
         if(_amount > accountBalance) {
-            println("Not enough money stored in your account")
-            println("Quitting...")
-            return
+            return 1
         }
 
+        //Invalid value
         if(_amount < 0) {
-            println("Withdraw value has to be greater than 0")
-            return
+            return 2
         }
 
         accountBalance -= _amount
-        println("Withdrawn $_amount from your account")
-        println("New Account Balance: $accountBalance")
+        addTransaction(transactionType, -_amount)
+        return 0
     }
 
-    fun deposit(_amount: Float) {
+    open fun deposit(_amount: Float, transactionType: TransactionType) : Int {
+        //Invalid value
         if(_amount < 0) {
-            println("Deposit value has to be greater than 0")
-            return
+            return 1
         }
 
         accountBalance += _amount
-        println("Deposit $_amount to your account")
-        println("New Account Balance: $accountBalance")
+        addTransaction(transactionType, _amount)
+        return 0
+    }
+
+    private fun addTransaction(transactionType: TransactionType, amount: Float) {
+        transactionHistory.add(Transaction(transactionType, amount))
+    }
+
+    fun getLastFiveTransactions() : String {
+        var output = ""
+        val reverseTransactions = transactionHistory.reversed()
+
+        for(i in 0 until min(reverseTransactions.size, 5)) {
+            output += "$i: ${reverseTransactions[i].amount} ${reverseTransactions[i].type}\n"
+        }
+        return output
     }
 
     override fun toString(): String {
