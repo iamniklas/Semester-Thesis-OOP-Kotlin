@@ -1,4 +1,6 @@
 import Program.running
+import accounttypes.Account
+import accounttypes.BasicAccount
 
 fun main(args: Array<String>) {
     val bank = Bank()

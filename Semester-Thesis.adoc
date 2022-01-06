@@ -1,0 +1,169 @@
+= Semester Thesis: OOP Golang vs Kotlin
+Niklas Englmeier <author@asciidoctor.org>
+3.0, July 29, 2022: AsciiDoc article template
+:toc:
+:icons: font
+:url-quickref: https://docs.asciidoctor.org/asciidoc/latest/syntax-quick-reference/
+
+== 1. Languages and Semester Thesis Details
+
+=== 1.1. Kotlin
+Kotlin is a new programming language developed by the Czech company JetBrains. Besides Kotlin, they are also known for the IntelliJ platform, which provides development platforms for various programming languages. For Kotlin there is the program IntelliJ IDEA, which can be used to develop for any Java language. In principle, Kotlin can be used in any environment where the JVM is also used. This includes frontend development or server development e.g. with Spring Boot or other enterprise frameworks. Since the official release in 2016, however, Kotlin has become established primarily in 2 areas: Android app development and server-side development. Both departments work in a strongly object-oriented way.
+
+=== 1.2. Golang
+Go is a programming language developed by Google that covers several paradigms: object-orientated, functional, concurrent, distributed, imperative, structured and modular programming. Additionally, it offers system and logical programming, as well as WebAssembly compilation. The syntax is oriented, apart from the peculiarities, to the classic high-level languages such as Java, C# or C++.
+
+=== 1.3. Comparison Details
+The goal of this work is to compare the two languages on object-oriented programming. For this a code project was created, in which a banking system is to be implemented. Special features in regard to traditional OOP and special techniques of both languages are pointed out.
+
+== 2. Code Project Overview and Explanation of Implementation
+
+=== 2.1. Source
+Even though only the implementation of the banking system in Kotlin is required for the term paper, the implementation for Go is optionally provided since in my opinion you can compare certain programming mechanisms better this way. Both projects can be found on GitHub under the linked repositories.
+https://github.com/iamniklas/Semester-Thesis-OOP-Kotlin/[Kotlin]
+https://github.com/iamniklas/Semester-Thesis-OOP-Golang/[Golang]
+
+=== 2.2. Code Project Overview
+
+This chapter is intended to give an overview of the code project and implementation using Kotlin of the term paper.
+The main component of the project is a banking system that manages a list of accounts. For account management, there are various functions that a conventional real bank also provides: Registration with account data, login with card number and PIN, logout, deposit and withdrawal at an ATM, account overview, and transferring money to another existing account.
+After a user logs in, he can use all of them. The control works similar to a CLI. Entering one of the keywords - viewable with the keyword help - triggers the input sequence of the required parameters. Then the parameters are passed to the banking system. If the processing has worked, the associated method returns the value 0. This way, the system is implemented to be as independent as possible from the user interface. In total there are three different types of account: Basic, Standard, and Super Premium. All inherit from the abstract base class Account, whereby the implementation of the deposit and withdrawal methods differs here. In addition, the available starting balance differs for each account. Calling ``addRegistrationAmount()`` will add the starting amount which is defined inside the method.
+
+[cols="1,1"]
+|===
+|Account Type
+|Start Account Balance
+
+|Basic Account
+|10.0
+
+|Standard Account
+|50.0
+
+|Super Premium Account
+|100.0
+|===
+
+For the Basic account, there is a 5% surcharge for withdrawals and a fee of the same amount for deposits.
+The Standard account, on the other hand, has no fee for deposits, but if the account balance is below 0 when a withdrawal is made, a surcharge of 10% has to be paid.
+The Super Premium account has a special deposit method implementation that I'm sure everyone would love to have in reality. When making a deposit, there is a 10% chance that the amount will increase by 50%.
+
+All transactions are stored in a transaction history within the account class and can be retrieved from the banking system. You can do that with the keyword _history_ which will return the last five transaction for the logged in account.
+
+== 3. Differences between Golang and Kotlin for object-orientated programming
+
+=== 3.1. General concepts of object orientated programming
+Object-oriented programming consists of four fundamental concepts: inheritance, abstraction, encapsulation and polymorphism. The two programming languages are compared in the following chapters on these principles.
+
+==== 3.1.1. Inheritance
+Inheritance is the principle of providing a class with skills of one (or in the case of multiple inheritance, multiple) classes. Usually this is achieved by having a base class (e.g. Animal) and deriving as many needed classes (e.g. Dog, Bird). Of course, you can extend these classes by another step of inheritance (e.g. Labrador, Parrot). The following scheme shows different models of inheritance.
+
+image::https://static.javatpoint.com/images/core/typesofinheritance.jpg[]
+Source: https://static.javatpoint.com/images/core/typesofinheritance.jpg
+
+In Kotlin inheritance works like in Java. Also, like in many programming languages, it can be disabled for individual classes. This can be realized with the keyword ``sealed``. If you add it to a class definition, other classes can no longer inherit from it. Multiple inheritance like in Go or C++ is not possible in Kotlin since the programmer has only one class to add to the classes first line of definition. All behind of the inherited class are interface implementations. As you can see in the code below there are some brackets behind the inherited class. This is a call to the constructor of the base class. This must also be done if it is an abstract class.
+
+-----
+File: BasicAccount.kt
+
+class BasicAccount : Account() {
+    ...
+}
+-----
+
+Since there are no classes in Go, only structs, inheritance works a bit differently. In Golang, the base structs are declared as member variables of the derived structs. This procedure is called _embedding_. Here it is also possible to declare the parent struct anonymously, i.e. without an identifier. It is also possible to inherit from multiple structs and create multiple inheritance.
+
+==== 3.1.2. Abstraction
+Abstraction can be seen as the counterpart to inheritance. It concerns the union of logic in classes, which is taken up in the step of the inheritance by the child classes. Also, here there is, as with the inheritance the sealed classes an optional restriction: Abstract classes differ from conventional ones in that one cannot instantiate them.
+
+Kotlin's abstraction procedure is the same as for most object-oriented languages. One class can serve as the basis for another. The logic is abstracted to that of the parent class. Kotlin also offers the possibility to mark classes and methods as abstract. Thus, an abstract class cannot be instantiated, whereas abstract methods must be overridden by an inheriting class.
+
+Abstraction in Golang works differently than in normal object orientation. Here this concept is realized via interfaces and embedded structs. However, the concept of abstract classes is not present in this programming language. The closest thing to the principle is not to provide the constructor of the structs. Note, however, that instances of the structs can still be created.
+
+==== 3.1.3. Encapsulation
+Encapsulation is the process of keeping class members, i.e. methods and variables, inside the class and protecting them from external logic. This is mostly realized via access modifiers, using either special keywords or a special notation of a class member.
+
+Kotlin solves this similarly to its sister languages in the JVM platform. Here, too, there are the four access modifiers _public_, _protected_, _internal_ and _private_, which restrict access in that order. public means that this member of a class instance is visible to every other class. Protected members, on the other hand, are only visible to subclasses of the base class. The third access modifier is internal, which makes the field visible only within the module. The most restrictive access modifier is private, which means that this member is not visible to any other class.
+
+Encapsulation in Golang works with the module's perspective. If the struct's method is _capitalized_, it is visible outside the module. If it starts in _lower case_, it can only be found inside the module. Let's take a look at the example from the code project. In the *account.go* file in the *accounttypes* module, there are two methods that demonstrate exactly this behavior. ``GetLastFiveTransaction()`` can also be found from the main package, ``accountTypeIntToName()`` however not.
+
+==== 3.1.4. Polymorphism
+The concept of polymorphism is strongly related to the concepts of inheritance and composition. It states that derived classes of a parent class have the same capabilities, but can be implemented differently. For example, if the base class Animal provides the method breathe, two or more inherited classes, such as Monkey and Fish, will have this capability, but polymorphism allows the implementation to change. Since a fish needs gills to breathe and a monkey needs a nose, the logic differs here and the implementation must be adapted. One way to do this is to override the parent class method in the inheriting class. The counterpart to polymorphism is monomorphism, whereby the logic of the methods does not change to those of its sister classes.
+Also part of polymorphism is that child classes can be declared as their parent class. Thus, a member variable may have the type dog, but the object behind it may have a labrador.
+
+In Kotlin, methods cannot be overridden by default. The *open* keyword is required for this. Then the method can be overwritten or overloaded. To overload, i.e. to additionally call the method implementation of the base class, the method is called with the prefixed word *super* inside the method of the child class. The deposit method inside one of the derived account classes is a perfect example for polymorphism.
+
+-----
+File: BasicAccount.kt
+
+override fun deposit(_amount: Float, _transactionType: TransactionType): Int {
+    val amount = _amount * 1.05f
+    return super.deposit(amount, _transactionType)
+}
+-----
+
+In Golang this concept can be explained quite briefly. A struct can only be addressed as a struct or implicitly as an interface implemented by it. Nevertheless, the logic of the respective instance is preserved.
+
+=== 3.2. Special concepts of OOP in Kotlin and Golang
+In addition to the four basic principles of OOP, both languages provide other concepts that extend this paradigm with certain features. A few are presented in the following subchapters.
+
+==== 3.2.1. Records (Data classes)
+The term record type refers to a special type of class that is within the field of object orientation but has a different special and unique characteristic. They are used to store data that cannot be changed after initialization, similar to final or readonly values. The difference here is that they are not individual fields, but entire classes that hold logically linked data together.
+
+In Kotlin, the implementation of a "data class", as it is called in this language, is very simple as the following example from the code project shows.
+
+----
+File: Transaction.kt
+
+data class Transaction(val type: TransactionType, val amount: Float)
+
+Note that 'TransactionType' is an enum class defined in the project.
+----
+
+A simple data class basically consists of only a class definition including the keyword *data* and a primary constructor whose parameters are marked as val, which means that they can be initialized only once. This one line of code now "generates" a complete class that contains the parameters contained in the constructor as fields, which cannot be changed after an instance of this class has been created, but are still readable from the outside. If necessary, you can still give logic to a data class by equipping it with methods and fields, just like a normal class.
+
+Records are technically possible in Go, but then a separate module must be created for each type. The variables must not be exported, i.e. they must be written in lower case. These variables are now used exclusively in the constructor and a getter method is created for each variable. In this way a record type can be implemented in Golang.
+
+==== 3.2.2. Extensions
+Extensions provide the ability to extend a class with functions outside its definition. This mechanic is usually used when the class originates from another module and the logic within that module should not be changed. An example of this is a project consisting of three modules: Backend, Frontend, Models, where Models define the data classes and thus the communication between Backend and Frontend. Classes of such a module should be freed by any logic, because the classes can vary strongly in their function in the frontend and backend.
+
+To extend a class in Kotlin, it must first be declared as open. Then, in any other code file, the class can be extended by methods. An example of how this can look like can be seen below.
+----
+e.g. in Account.kt (not included in code project)
+
+fun Bank.extensionFunction() {
+    println("This is an extended function")
+}
+----
+
+Extensions are also possible in Golang, but only within the same module. This therefore unfortunately does not offer the possibility to use extensions the way you can in Kotlin.
+
+==== 3.2.3. Make Objects to Strings
+Converting an object into a string is not a principle of object orientation, but it can be compared in object-oriented terms because of the structure of the two languages.
+
+To understand how objects are converted to strings in Kotlin, you need to be aware that each class inherits from the class _Any_. It has three basic methods, including the _toString_ method. The use of the toString method is an ideal demonstration for the principle of polymorphism. In the required class, the method is overridden and a string linked to the class logic is returned. An example of this is the text output of the Account class in the code project.
+-----
+File: Account.kt
+
+override fun toString(): String {
+        return "Account Owner: $firstName $lastName \nCard Identifier: $accountIdentifier \nAccount Balance: $accountBalance \nPIN: $pin"
+}
+-----
+
+In Go, however, the stringer interface is used. It contains the _String_ method and any struct can implicitly override it. The code below shows how the same behavior as in the Kotlin example can be created.
+-----
+File: account.go
+
+func (acc Account) String() string {
+	return fmt.Sprintf("Account Owner: %s %s \nCard Identifier: %s \nAccount Balance: %f \nPIN: %s",
+		acc.FirstName,
+        acc.LastName,
+        acc.AccountIdentifier,
+        acc.AccountBalance,
+        acc.Pin)
+}
+-----
+
+== 4. Conclusion
+
+This work shows that Golang and Kotlin do differ in some respects within object-oriented programming. Ultimately, you have to decide for yourself which of the two languages you want to use. Both have their advantages and disadvantages and their respective domains. Where Go is mainly used in areas such as cloud and backend development, Kotlin on the other hand is additionally used in mobile development. Kotlin is more oriented towards a logic of C and C++ languages, whereas Kotlin, as part of the JVM platform, is more directed towards Java and related languages. Both are very young languages and the future will show which languages will prove themselves.
