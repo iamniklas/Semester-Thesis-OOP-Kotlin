@@ -3,8 +3,6 @@ import accounttypes.StandardAccount
 import accounttypes.SuperPremiumAccount
 import accounttypes.TransactionType
 import org.junit.jupiter.api.Test
-import java.io.FileReader
-import kotlin.math.floor
 
 class BankSystemTests {
     @Test

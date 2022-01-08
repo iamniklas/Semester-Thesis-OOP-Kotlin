@@ -1,5 +1,4 @@
 import accounttypes.Account
-import accounttypes.StandardAccount
 import accounttypes.TransactionType
 import com.google.gson.Gson
 import java.time.LocalDateTime
@@ -42,28 +41,37 @@ class Bank {
         return 0
     }
 
-    fun withdraw(_amount: Float, _transactionType: TransactionType) : Int {
+    fun withdraw(_amount: Float?, _transactionType: TransactionType) : Int {
         if(!requireLogin()) { return 1 }
+        if(_amount == null) {
+            return 2
+        }
         loggedInAs!!.withdraw(_amount, _transactionType)
         return 0
     }
 
-    fun deposit(_amount: Float, _transactionType: TransactionType) : Int {
+    fun deposit(_amount: Float?, _transactionType: TransactionType) : Int {
         if(!requireLogin()) { return 1 }
+        if (_amount == null) {
+            return 2
+        }
         loggedInAs!!.deposit(_amount, _transactionType)
         return 0
     }
 
-    fun transfer(_accountId: String, _moneyToTransfer: Float) : Int{
+    fun transfer(_accountId: String, _moneyToTransfer: Float?) : Int{
         if(!requireLogin()) { return 1 }
-        if(_moneyToTransfer < 0.0f) {
+        if(_moneyToTransfer == null) {
             return 2
         }
-        if(loggedInAs!!.accountBalance < _moneyToTransfer) {
+        if(_moneyToTransfer < 0.0f) {
             return 3
         }
-        if(!registeredAccounts.any { it.accountIdentifier.contentEquals(_accountId) }) {
+        if(loggedInAs!!.accountBalance < _moneyToTransfer) {
             return 4
+        }
+        if(!registeredAccounts.any { it.accountIdentifier.contentEquals(_accountId) }) {
+            return 5
         }
 
         //Better with built-in kotlin functions (e.g. first {it ->}), but this will only return a copy. That is why I'm not using it here
@@ -77,13 +85,13 @@ class Bank {
         return 0
     }
 
-    fun getAccountInfo() : String {
-        if(!requireLogin()) { return "null" }
+    fun getAccountInfo() : String? {
+        if(!requireLogin()) { return null }
         return loggedInAs.toString()
     }
 
-    fun getTransferHistory() : String {
-        if(requireLogin()) return "null"
+    fun getTransferHistory() : String? {
+        if(requireLogin()) return null
         return loggedInAs!!.getLastFiveTransactions()
     }
 

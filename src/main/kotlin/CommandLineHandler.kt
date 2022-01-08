@@ -11,7 +11,7 @@ object CommandLineHandler {
         var result = 0
 
         //Read AccountType
-        when(readLine()!!.toInt()) {
+        when(readLine()!!.toIntOrNull()) {
             0 -> {
                 val basicAccount = BasicAccount().apply {
                     firstName = firstNameLine
@@ -38,6 +38,7 @@ object CommandLineHandler {
             }
             else -> {
                 println("Invalid input")
+                result = 1
             }
         }
 
@@ -78,7 +79,7 @@ object CommandLineHandler {
 
     fun withdraw(_bank: Bank) {
         println("Enter the amount to withdraw")
-        val result = _bank.withdraw(readLine()!!.toFloat(), TransactionType.ATM)
+        val result = _bank.withdraw(readLine()!!.toFloatOrNull(), TransactionType.ATM)
 
         if (result == 0) {
             println("Withdraw successful")
@@ -89,7 +90,7 @@ object CommandLineHandler {
 
     fun deposit(_bank: Bank) {
         println("Enter the amount to deposit")
-        val result = _bank.deposit(readLine()!!.toFloat(), TransactionType.ATM)
+        val result = _bank.deposit(readLine()!!.toFloatOrNull(), TransactionType.ATM)
 
         if (result == 0) {
             println("Deposit successful")
@@ -103,7 +104,7 @@ object CommandLineHandler {
         println("Enter the target account's identifier")
         val accountId = readLine()!!
         println("Enter the amount of money you want to transfer")
-        val moneyToTransfer = readLine()!!.toFloat()
+        val moneyToTransfer = readLine()!!.toFloatOrNull()
         val result = _bank.transfer(accountId, moneyToTransfer)
 
         if (result == 0) {
@@ -112,23 +113,24 @@ object CommandLineHandler {
             println("Transfer failed, Error-Code: $result")
         }
     }
+
     fun info(_bank: Bank) {
         val result = _bank.getAccountInfo()
 
-        if (result != "null") {
-            println(result)
-        } else {
+        if (result == null) {
             println("Deposit failed! Account info empty, are you logged in?")
+        } else {
+            println(result)
         }
     }
 
     fun history(_bank: Bank) {
         val result = _bank.getTransferHistory()
 
-        if (result != "null") {
-            println(result)
-        } else {
+        if (result == null) {
             println("Fetching History failed! History invalid, are you logged in?")
+        } else {
+            println(result)
         }
     }
 

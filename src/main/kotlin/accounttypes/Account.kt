@@ -2,7 +2,6 @@ package accounttypes
 
 import java.lang.Integer.min
 import java.time.LocalDateTime
-import kotlin.math.max
 
 abstract class Account {
     var firstName: String = ""
