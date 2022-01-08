@@ -61,7 +61,7 @@ Inheritance is the principle of providing a class with features of one (or in th
 image::https://static.javatpoint.com/images/core/typesofinheritance.jpg[]
 Source: https://static.javatpoint.com/images/core/typesofinheritance.jpg
 
-In Kotlin, inheritance works like in Java. Also, like in many programming languages, it can be disabled for individual classes. This can be realized with the keyword ``sealed``. If you add it to a class definition, other classes can no longer inherit from it. Multiple inheritance like in Go or C++ is not possible in Kotlin since the programmer has only one class to add to the classes first line of definition. All behind of the inherited class are interface implementations. As you can see in the code below there are some brackets behind the inherited class. This is a call to the constructor of the base class. This must also be done if it is an abstract class.
+In Kotlin, inheritance works like in Java. Also, like in many programming languages, it can be disabled for individual classes. This can be realized with the keyword ``sealed``. If you add it to a class definition, other classes can no longer inherit from it. Multiple inheritance like in Go or C++ is not possible in Kotlin since the programmer has only one class to add to the classes first line of definition. All behind of the inherited class are interface implementations (Kofler and Galileo Press, S.272). As you can see in the code below there are some brackets behind the inherited class. This is a call to the constructor of the base class. This must also be done if it is an abstract class.
 
 -----
 File: BasicAccount.kt
@@ -76,7 +76,7 @@ Since there are no classes in Go, only structs, inheritance works a bit differen
 ==== 3.1.2. Abstraction
 Abstraction can be seen as the counterpart to inheritance. It concerns the union of logic in classes, which is taken up in the step of the inheritance by the child classes. Here there is, as with the inheritance the sealed classes, an optional restriction: So-called _abstract_ classes differ from conventional ones in that one cannot instantiate them, but only inherit.
 
-Kotlin's abstraction procedure is the same as for most object-oriented languages. One class can serve as the basis for another. The logic is abstracted to that of the parent class. Kotlin also offers the possibility to mark classes and methods as abstract. Thus, an abstract class cannot be instantiated, whereas abstract methods must be overridden by an inheriting class.
+Kotlin's abstraction procedure is the same as for most object-oriented languages. One class can serve as the basis for another. The logic is abstracted to that of the parent class. Kotlin also offers the possibility to mark classes and methods as abstract (Kofler and Galileo Press, S.281). Thus, an abstract class cannot be instantiated, whereas abstract methods must be overridden by an inheriting class.
 
 Abstraction in Golang works differently than in normal object orientation. Here this concept is realized via interfaces and embedded structs. However, the concept of abstract classes is not present in this programming language. The closest thing to the principle is not to provide the constructor of the structs. Note that instances of the structs can still be created.
 
@@ -108,7 +108,7 @@ In Golang this concept can be explained quite briefly. A struct can only be addr
 In addition to the four basic principles of OOP, both languages provide other concepts that extend this paradigm with certain features. A few are presented in the following subchapters.
 
 ==== 3.2.1. Records (Data classes)
-The term _record type_ refers to a special type of class that is within the field of object orientation but has a different special and unique characteristic. They are used to store data that cannot be changed after initialization, similar to final or readonly values. The difference here is that they are not individual fields, but entire class definitions that hold logically linked data together.
+The term _record type_ refers to a special type of class that is within the field of object orientation but has a different special and unique characteristic. They are used to store data that cannot be changed after initialization, similar to final or readonly values (Kofler and Galileo Press, S.287). The difference here is that they are not individual fields, but entire class definitions that hold logically linked data together.
 
 In Kotlin, the implementation of a "data class", as it is called in this language, is very simple as the following example from the code project shows.
 
@@ -127,7 +127,7 @@ Records are technically possible in Go, but then a separate module must be creat
 ==== 3.2.2. Extensions
 Extensions provide the ability to extend a class with functions outside its definition. This mechanic is usually used when the class originates from another module and the logic within that module should not be changed. An example of this is a project consisting of three modules: Backend, Frontend, Models, where Models define the data classes and thus the communication between Backend and Frontend. Classes of such a module should be freed by any logic, because the classes can vary strongly in their function in the frontend and backend.
 
-To extend a class in Kotlin, it must first be declared as open. Then, in any other code file, the class can be extended by methods. An example of how this can look like can be seen below.
+To extend a class in Kotlin, it must first be declared as open. Then, in any other code file, the class can be extended by methods (Kofler and Galileo Press, S.304). An example of how this can look like can be seen below.
 ----
 e.g. in Account.kt (not included in code project)
 
@@ -141,7 +141,7 @@ Extensions are also possible in Golang, but only within the same module. This th
 ==== 3.2.3. Make Objects to Strings
 Converting an object into a string is not a principle of object orientation, but it can be compared in object-oriented terms because of the structure of the two languages.
 
-To understand how objects are converted to strings in Kotlin, you need to be aware that each class inherits from the class _Any_. It has three basic methods, including the ``toString()`` method. The use of the toString method is an ideal demonstration for the principle of polymorphism. In the required class, the method is overridden and a string linked to the class logic is returned. An example of this is the text output of the Account class in the code project.
+To understand how objects are converted to strings in Kotlin, you need to be aware that each class inherits from the class _Any_. It has three basic methods, including the ``toString()`` method (Kofler and Galileo Press, S.284). The use of the toString method is an ideal demonstration for the principle of polymorphism. In the required class, the method is overridden and a string linked to the class logic is returned. An example of this is the text output of the Account class in the code project.
 -----
 File: Account.kt
 
@@ -167,3 +167,7 @@ func (acc Account) String() string {
 == 4. Conclusion
 
 This work shows that Golang and Kotlin do differ in some points within object-oriented programming. Ultimately, you have to decide for yourself which of the two languages you want to use. Both have their advantages and disadvantages and their respective domains. Where Go is mainly used in areas such as cloud and backend development, Kotlin on the other hand is additionally used in mobile development. Golang is more oriented towards a logic of C and C++ languages, whereas Kotlin, as part of the JVM platform, is more directed towards Java and related languages. Both are very young languages and the future will show which languages will prove themselves.
+
+== 5. Sources
+
+Kofler, M. and Galileo Press (2021). Kotlin : das umfassende Handbuch. Bonn Rheinwerk.
